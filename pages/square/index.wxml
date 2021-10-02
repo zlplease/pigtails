@@ -1,0 +1,4 @@
+<view class="total">
+  <view class="title">SQUARE</view>
+  <view class="room"></view>
+</view>

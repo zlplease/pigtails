@@ -1,0 +1,9 @@
+.total {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background-image: url("https://img.zcool.cn/community/01eb515d4247c1a8012187f486ea54.jpg@1280w_1l_0o_100sh.jpg");
+  background-size: 100% 100%;
+}

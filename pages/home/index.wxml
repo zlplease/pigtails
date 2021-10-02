@@ -1,0 +1,23 @@
+<view class="total">
+  <view class="info">
+    <view class="avater">
+      <image mode="aspectFill" src="https://img.zcool.cn/community/0173a05d390797a80120695cf890e3.jpg@2o.jpg" />
+    </view>
+    <view class="userInfo">
+      <view class="userName">{{userName}}</view>
+      <view class="integral">积分：{{integral}}</view>
+    </view>
+  </view>
+  <view class="buttons">
+    <view class="btn local" data-path="/pages/localGame/index" bindtap="chooseMode">本地作战</view>
+    <view class="btn PVP" data-path="/pages/PVPGame/index" bindtap="chooseMode">在线对战</view>
+    <view class="btn PVE" data-path="/pages/PVEGame/index" bindtap="chooseMode">人机对战</view>
+  </view>
+  <view class="square" data-path="/pages/square/index" bindtap="chooseMode">广场</view>
+  <view class="pigs">
+    <image class="pig pig1" src="https://z3.ax1x.com/2021/10/02/4b6fbD.png"></image>
+    <image class="pig pig2" src="https://z3.ax1x.com/2021/10/02/4b64Ve.png"></image>
+    <image class="pig pig3" src="https://z3.ax1x.com/2021/10/02/4b65UH.png"></image>
+    <image class="pig pig4" src="https://z3.ax1x.com/2021/10/02/4b65UH.png"></image>
+  </view>
+</view>

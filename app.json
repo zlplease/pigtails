@@ -1,13 +1,19 @@
 {
   "pages":[
-    "pages/index/index",
-    "pages/logs/logs"
+    "pages/home/index",
+    "pages/login/index",
+    "pages/createRoom/index",
+    "pages/PVPGame/index",
+    "pages/PVEGame/index",
+    "pages/localGame/index",
+    "pages/square/index"
   ],
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Weixin",
-    "navigationBarTextStyle":"black"
+    "navigationStyle": "custom",
+    "navigationBarTitleText": "pigtails",
+    "navigationBarTextStyle":"white"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"

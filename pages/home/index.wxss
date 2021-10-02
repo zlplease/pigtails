@@ -1,0 +1,114 @@
+.total {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background-image: url("https://img.zcool.cn/community/019c715d4247c1a80120695c2123a6.jpg@3000w_1l_0o_100sh.jpg");
+  background-size: 100% 100%;
+}
+
+.info {
+  margin: 80rpx 30rpx;
+  display: flex;
+  height: 120rpx;
+  width: 60%;
+  align-items: center;
+  border-radius: 48rpx;
+  background-color: rgb(192, 204, 184, 0.2);
+}
+
+.avater {
+  margin: 0 24rpx;
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: 50%;
+  background-image: linear-gradient(to right, #74CC98 ,#8CBBFF);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avater image {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+}
+
+.userInfo {
+  font-weight: bold;
+}
+
+.integral{
+  font-size: 32rpx;
+}
+
+.buttons {
+  padding-top: 240rpx;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn {
+  width: 360rpx;
+  height: 108rpx;
+  margin-bottom: 64rpx; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 48rpx;
+  color: white;
+  font-size: 42rpx;
+  font-weight: bold;
+  background: linear-gradient(145deg, #FF7B47, #FF6347);
+  z-index: 100;
+}
+
+.square {
+  position:absolute;
+  bottom: 120rpx;
+  right: 20rpx;
+  width: 144rpx;
+  height: 144rpx;
+  background-color: tomato;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  box-shadow:  5px 5px 10px #90733C,
+             -5px -5px 10px #FFD468;
+}
+
+.pig {
+  width: 180rpx;
+  height: 120rpx;
+  position: absolute;
+  z-index: 101;
+}
+
+.pig1 {
+  top: 508rpx;
+  left: 120rpx;
+}
+
+.pig2 {
+  top: 690rpx;
+  left: 500rpx;
+}
+
+.pig3 {
+  position: absolute;
+  top: 860rpx;
+  left: 120rpx;
+}
+
+.pig4 {
+  width: 120rpx;
+  height: 80rpx;
+  bottom: 224rpx;
+  right: 18rpx;
+}
