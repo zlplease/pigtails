@@ -1,4 +1,3 @@
-// app.js
 App({
   onLaunch() {
     // 展示本地存储能力
@@ -14,6 +13,7 @@ App({
     })
   },
   globalData: {
-    userInfo: null
+    userInfo: null,
+    baseUrl: 'http://172.17.173.97:9000/api'
   }
 })

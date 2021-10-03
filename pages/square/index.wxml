@@ -1,4 +1,19 @@
 <view class="total">
-  <view class="title">SQUARE</view>
-  <view class="room"></view>
+  <view class="content">
+    <view class="title">Square</view>
+    <view class="rooms">
+      <view class="room" wx:for="{{games}}" wx:key="key">
+        <image  mode="widthFill" src="{{pigsPic[index]}}"/>
+        <view class="player">player1: {{item.host_id}}</view>
+        <view class="player" wx:if="{{item.client_id != 0}}">player2: {{item.client_id}}</view>
+        <view data-index="{{index}}" bindtap="joinGame" class="joinGame" wx:if="{{item.client_id == 0}}">加入对局</view>
+      </view>
+    </view>
+    <view class="btns">
+      <!-- -1代表向前翻页，1代表向后翻页 -->
+      <view data-type="-1" bindtap="turnPage" class="btn before {{nowPage==1 ? 'avoid' : ''}}">上一页</view>
+      <view class="nowPage">第{{nowPage}}页</view>
+      <view data-type="1" bindtap="turnPage" class="btn after {{nowPage==totalPage ? 'avoid' : ''}}">下一页</view>
+    </view>
+  </view>
 </view>

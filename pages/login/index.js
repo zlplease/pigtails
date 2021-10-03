@@ -1,8 +1,8 @@
 Page({
 
   data: {
-    stuId: '',
-    password: ''
+    stuId: '031902330',
+    password: '18559120521zlp'
   },
 
   login: function() {
@@ -19,12 +19,13 @@ Page({
         console.log(res)
         console.log(res.data.status)
         if (res.data.status == 200) {
-          wx.navigateTo({
-            url: '/pages/home/index',
-          });
+          //将token存入本地缓存
           wx.setStorage({
             key: 'token',
-            data: res.data.token,
+            data: res.data.data.token,
+          });
+          wx.navigateTo({
+            url: '/pages/home/index',
           });
         }
       }
