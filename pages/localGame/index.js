@@ -1,11 +1,53 @@
-// pages/localGame/index.js
 Page({
 
-  /**
-   * 页面的初始数据
-   */
   data: {
+    //0代表自己，1代表对手
+    turn: 0,
+    //是否有选中的牌
+    selectedCard: false,
+    gameOver: false,
+    placeEmpty: true,
+    game: {
+      player1: {
+        spade: ['S1','S2','S1','S2'],
+        heart: ['HK'],
+        club: ['C5'],
+        diamond: ['D4'],
+        totalCount: 0
+      },
+      player2: {
+        spade: ['S1','S2','S1','S2'],
+        heart: ['HQ'],
+        club: ['C9','CJ'],
+        diamond: ['D2'],
+        totalCount: 0
+      },
+      deck: ['S1','S2','S1','S2'],
+      placement: {
+        nowCards: ['S1','S2','S1','S2'],
+        topCard: ''
+      }
+    }
+  },
 
+  selectcard: function() {
+    this.setData({
+      selectedCard: !this.data.selectedCard
+    })
+  },
+
+  //确定出牌
+  confirm: function() {
+    this.setData({
+      turn: (this.data.turn+1)%2,
+      selectedCard: !this.data.selectedCard
+    })
+  },
+
+  cancel:function() {
+    this.setData({
+      selectedCard: !this.data.selectedCard
+    })
   },
 
   /**
@@ -28,39 +70,4 @@ Page({
   onShow: function () {
 
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  }
 })
