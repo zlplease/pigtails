@@ -232,6 +232,6 @@
 .selected {
   width: 102%;
   height: 102%;
-  box-shadow:  4rpx 4rpx 60rpx #ededed,
-             -4rpx -4rpx 60rpx #ffffff;
+  box-shadow:  4rpx 4rpx 20rpx #ededed,
+             -4rpx -4rpx 20rpx #ffffff;
 }

@@ -4,15 +4,16 @@
       <image class="avater {{turn == 1 ? 'round' : ''}}" src="https://img.zcool.cn/community/01ec48579198180000018c1b4c60d4.jpg@1280w_1l_2o_100sh.jpg" mode="widthFill"></image>
       <!-- 手牌堆 -->
       <view class="op">
-        <view class="btns" wx-if="{{turn == 1 && selectedCard }}">
+        <view class="btns" wx-if="{{turn == 1 && ( selectedCard || selectedHandCard )}}">
           <view class="btn confirm" bindtap="confirm">确定</view>
           <view class="btn cancel" bindtap="cancel">取消</view>
         </view>
         <view class="handCards">
+          <!-- 黑桃 红桃 梅花 方片 -->
           <view class="flowerColor">
             <view class="count">{{game.player2.spade.length}}</view>
             <view class="cards">
-              <view class="card" wx:for="{{game.player2.spade}}" wx:key="key">
+              <view data-flower="S" bindtap="selectHandCards" class="card {{(flower == 'S' && turn == 1 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player2.spade}}" wx:key="key">
                 <!-- 显示牌堆第一张 -->
                 <image src="../../images/poker/{{game.player2.spade[index]}}.jpg" mode="widthFill" />
               </view>
@@ -21,7 +22,7 @@
           <view class="flowerColor">
             <view class="count">{{game.player2.heart.length}}</view>
             <view class="cards">
-              <view class="card" wx:for="{{game.player2.heart}}" wx:key="key">
+              <view data-flower="H" bindtap="selectHandCards" class="card {{(flower == 'H' && turn == 1 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player2.heart}}" wx:key="key">
                 <image src="../../images/poker/{{game.player2.heart[index]}}.jpg" mode="widthFill" />
               </view>
             </view>
@@ -29,7 +30,7 @@
           <view class="flowerColor">
             <view class="count">{{game.player2.club.length}}</view>
             <view class="cards">
-              <view class="card" wx:for="{{game.player2.club}}" wx:key="key">
+              <view data-flower="C" bindtap="selectHandCards" class="card {{(flower == 'C' && turn == 1 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player2.club}}" wx:key="key">
                 <image src="../../images/poker/{{game.player2.club[index]}}.jpg" mode="widthFill" />
               </view>
             </view>
@@ -37,7 +38,7 @@
           <view class="flowerColor">
             <view class="count">{{game.player2.diamond.length}}</view>
             <view class="cards">
-              <view class="card" wx:for="{{game.player2.diamond}}" wx:key="key">
+              <view data-flower="D" bindtap="selectHandCards" class="card {{(flower == 'D' && turn == 1 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player2.diamond}}" wx:key="key">
                 <image src="../../images/poker/{{game.player2.diamond[index]}}.jpg" mode="widthFill" />
               </view>
             </view>
@@ -62,7 +63,7 @@
       <!-- 放置区 -->
       <view class="deck {{placeEmpty == true ? 'emptyDeck' : ''}}">
         <view class="placeCards" wx:for="{{game.placement.nowCards}}" wx:key="key">
-          <image class="front" mode="widthFill" src="../../images/poker/C1.jpg"></image>
+          <image class="front" mode="widthFill" src="../../images/poker/{{game.placement.nowCards[game.placement.nowCards.length-1]}}.jpg"></image>
         </view>
       </view>
     </view>
@@ -70,7 +71,7 @@
       <image class="avater {{turn == 0 ? 'round' : ''}}" src="https://img.zcool.cn/community/0196f9579198180000012e7ef0b234.jpg@1280w_1l_2o_100sh.jpg" mode="widthFill"></image>
       <!-- 手牌堆 -->
       <view class="op">
-        <view class="btns" wx-if="{{turn == 0 && selectedCard }}">
+        <view class="btns" wx-if="{{turn == 0 && (selectedCard || selectedHandCard)}}">
           <view class="btn confirm" bindtap="confirm">确定</view>
           <view class="btn cancel" bindtap="cancel">取消</view>
         </view>
@@ -78,7 +79,7 @@
           <view class="flowerColor">
             <view class="count">{{game.player1.spade.length}}</view>
             <view class="cards">
-              <view class="card" wx:for="{{game.player1.spade}}" wx:key="key">
+              <view data-flower="S" bindtap="selectHandCards" class="card {{(flower == 'S' && turn == 0 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player1.spade}}" wx:key="key">
                 <!-- 显示牌堆第一张 -->
                 <image src="../../images/poker/{{game.player1.spade[index]}}.jpg" mode="widthFill" />
               </view>
@@ -87,7 +88,7 @@
           <view class="flowerColor">
             <view class="count">{{game.player1.heart.length}}</view>
             <view class="cards">
-              <view class="card" wx:for="{{game.player1.heart}}" wx:key="key">
+              <view data-flower="H" bindtap="selectHandCards" class="card {{(flower == 'H' && turn == 0 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player1.heart}}" wx:key="key">
                 <image src="../../images/poker/{{game.player1.heart[index]}}.jpg" mode="widthFill" />
               </view>
             </view>
@@ -95,7 +96,7 @@
           <view class="flowerColor">
             <view class="count">{{game.player1.club.length}}</view>
             <view class="cards">
-              <view class="card" wx:for="{{game.player1.club}}" wx:key="key">
+              <view data-flower="C" bindtap="selectHandCards" class="card {{(flower == 'C' && turn == 0 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player1.club}}" wx:key="key">
                 <image src="../../images/poker/{{game.player1.club[index]}}.jpg" mode="widthFill" />
               </view>
             </view>
@@ -103,7 +104,7 @@
           <view class="flowerColor">
             <view class="count">{{game.player1.diamond.length}}</view>
             <view class="cards">
-              <view class="card" wx:for="{{game.player1.diamond}}" wx:key="key">
+              <view data-flower="D" bindtap="selectHandCards" class="card {{(flower == 'D' && turn == 0 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player1.diamond}}" wx:key="key">
                 <image src="../../images/poker/{{game.player1.diamond[index]}}.jpg" mode="widthFill" />
               </view>
             </view>
