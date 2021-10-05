@@ -33,7 +33,7 @@ Page({
         nowCards: [],
         topCard: ''
       }
-    }
+    },
   },
 
   selectcard: function () {
@@ -200,15 +200,36 @@ Page({
     if (!deckLen) {
       var count1 = game.player1.totalCount
       var count2 = game.player2.totalCount
+      var content = ''
       if (count1 < count2) {
-        console.log('1P胜利')
+        content = '好耶，玩家一获得了胜利'
       }
       else if (count1 == count2) {
-        console.log('平局')
+        content = '好耶，玩家二获得了胜利'
       }
       else {
-        console.log('2P胜利')
+        content = '好耶，平分秋色'
       }
+
+      //弹出信息并跳转
+      setTimeout(() => {
+        wx.showModal({
+          title: '比赛结果',
+          content: content,
+          showCancel: false,
+          confirmText: '知道啦',
+          confirmColor: '#3CC51F',
+          success: (result) => {
+            if(result.confirm){
+              setTimeout(() => {
+                wx.reLaunch({
+                  url: '/pages/home/index',
+                });
+              }, 500);
+            }
+          },
+        });
+      }, 1000);
     }
 
   },
