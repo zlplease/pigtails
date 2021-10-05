@@ -1,11 +1,12 @@
 <view class="total">
   <view class="content">
-    <view class="player player2">
+    <!-- 通过disable类将不是自己回合的点击事件禁止 -->
+    <view class="player player2 {{turn == 0 ? 'disable' : ''}}">
       <image class="avater {{turn == 1 ? 'round' : ''}}" src="https://img.zcool.cn/community/01ec48579198180000018c1b4c60d4.jpg@1280w_1l_2o_100sh.jpg" mode="widthFill"></image>
       <!-- 手牌堆 -->
       <view class="op">
         <view class="btns" wx-if="{{turn == 1 && ( selectedCard || selectedHandCard )}}">
-          <view class="btn confirm" bindtap="confirm">确定</view>
+          <view class="btn confirm" data-player="1" bindtap="confirm">确定</view>
           <view class="btn cancel" bindtap="cancel">取消</view>
         </view>
         <view class="handCards">
@@ -54,11 +55,11 @@
         </view>
       </view>
       <view class="op1">
-        <view class="countDown countDown2" wx:if="{{turn == 1}}">1</view>
-        <view class="changeCard">
+        <view class="countDown countDown2" wx:if="{{turn == 1}}">换一张</view>
+        <view class="changeCard" bindtap="changeCard">
           <image class="update" mode="widthFill" src="../../images/icon/update.png" />
         </view>
-        <view class="countDown" wx:if="{{turn == 0}}">1</view>
+        <view class="countDown" wx:if="{{turn == 0}}">换一张</view>
       </view>
       <!-- 放置区 -->
       <view class="deck {{placeEmpty == true ? 'emptyDeck' : ''}}">
@@ -67,12 +68,12 @@
         </view>
       </view>
     </view>
-    <view class="player player1">
+    <view class="player player1 {{turn == 1 ? 'disable' : ''}}">
       <image class="avater {{turn == 0 ? 'round' : ''}}" src="https://img.zcool.cn/community/0196f9579198180000012e7ef0b234.jpg@1280w_1l_2o_100sh.jpg" mode="widthFill"></image>
       <!-- 手牌堆 -->
       <view class="op">
         <view class="btns" wx-if="{{turn == 0 && (selectedCard || selectedHandCard)}}">
-          <view class="btn confirm" bindtap="confirm">确定</view>
+          <view class="btn confirm" data-player="0" bindtap="confirm">确定</view>
           <view class="btn cancel" bindtap="cancel">取消</view>
         </view>
         <view class="handCards">

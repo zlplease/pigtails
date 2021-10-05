@@ -15,22 +15,22 @@ Page({
     placeEmpty: true,
     game: {
       player1: {
-        spade: ['S1', 'S2', 'S1', 'S2'],
-        heart: ['HK'],
-        club: ['C5'],
-        diamond: ['D4'],
+        spade: [],
+        heart: [],
+        club: [],
+        diamond: [],
         totalCount: 0
       },
       player2: {
-        spade: ['S1', 'S2', 'S1'],
-        heart: ['HQ'],
-        club: ['C9', 'CJ'],
-        diamond: ['D2'],
+        spade: [],
+        heart: [],
+        club: [],
+        diamond: [],
         totalCount: 0
       },
-      deck: ['S1', 'S2', 'S1', 'S2'],
+      deck: [],
       placement: {
-        nowCards: ['D2'],
+        nowCards: [],
         topCard: ''
       }
     }
@@ -52,6 +52,7 @@ Page({
   },
 
   selectHandCards: function (e) {
+    console.log(this.data.turn)
     var flower = e.currentTarget.dataset.flower
     if (this.data.flower == '') {
       this.setData({
@@ -75,30 +76,170 @@ Page({
         selectedCard: !this.data.selectedCard
       })
     }
-    //test
-    // console.log(this.data.selectedCard)
-    // console.log(this.data.selectedHandCard)
+  },
+
+  changeCard: function () {
+    var game = this.data.game
+    game.deck.sort(this.randomDeck)
+    this.setData({
+      game: game
+    })
+    wx.showToast({
+      title: '已更新牌堆',
+      icon: 'success',
+      duration: 1500,
+    
+    });
   },
 
   //确定出牌
-  confirm: function () {
+  confirm: function (e) {
+    //test
+    // console.log(this.data.selectedCard)
+    // console.log(this.data.selectedHandCard)
+    var game = this.data.game
+    //判断选中的牌是否来自deck牌堆
+    var temp = ''
+    var player = e.currentTarget.dataset.player
+    if (this.data.selectedCard) {
+      //弹出deck的最后一个元素
+      temp = game.deck.pop()
+    } else if (this.data.selectedHandCard) {
+      //判断选中的牌的具体来源
+      var flower = this.data.flower
+      //如果是1P
+      if (player == 0) {
+        // console.log(flower)
+        switch (flower) {
+          case 'S': temp = game.player1.spade.pop()
+            break;
+          case 'H': temp = game.player1.heart.pop()
+            break;
+          case 'C': temp = game.player1.club.pop()
+            break;
+          case 'D': temp = game.player1.diamond.pop()
+            break;
+        }
+        game.player1.totalCount -= 1
+      } else {
+        //如果是2P
+        switch (flower) {
+          case 'S': temp = game.player2.spade.pop()
+            break;
+          case 'H': temp = game.player2.heart.pop()
+            break;
+          case 'C': temp = game.player2.club.pop()
+            break;
+          case 'D': temp = game.player2.diamond.pop()
+            break;
+        }
+        game.player2.totalCount -= 1
+      }
+    }
+
+    game.placement.nowCards.push(temp)
+    game.placement.topCard = temp
+
     this.setData({
+      game: game,
       turn: (this.data.turn + 1) % 2,
       selectedCard: false,
       selectedHandCard: false,
       flower: ''
     })
+
+    //判断牌顶牌是否一样
+    var len = this.data.game.placement.nowCards.length
+    if (len >= 2) {
+      if (game.placement.nowCards[len - 1][0] == game.placement.nowCards[len - 2][0]) {
+        console.log('收牌')
+        var chargeCards = game.placement.nowCards
+        chargeCards.sort()
+        console.log(chargeCards)
+        for (var i = 0; i < len; i++) {
+          var flower = chargeCards[i][0]
+          var card = chargeCards[i]
+          if (player == 0) {
+            // console.log(flower)
+            switch (flower) {
+              case 'S': game.player1.spade.push(card)
+                break;
+              case 'H': game.player1.heart.push(card)
+                break;
+              case 'C': game.player1.club.push(card)
+                break;
+              case 'D': game.player1.diamond.push(card)
+                break;
+            }
+            game.player1.totalCount += 1
+          } else {
+            //如果是2P
+            switch (flower) {
+              case 'S': game.player2.spade.push(card)
+                break;
+              case 'H': game.player2.heart.push(card)
+                break;
+              case 'C': game.player2.club.push(card)
+                break;
+              case 'D': game.player2.diamond.push(card)
+                break;
+            }
+            game.player2.totalCount += 1
+          }
+        }
+        game.placement.nowCards = []
+        game.placement.topCard = ''
+        this.setData({
+          game: game
+        })
+      }
+    }
+
+    //判断是否结束
+    var deckLen = this.data.game.deck.length
+    if (!deckLen) {
+      var count1 = game.player1.totalCount
+      var count2 = game.player2.totalCount
+      if (count1 < count2) {
+        console.log('1P胜利')
+      }
+      else if (count1 == count2) {
+        console.log('平局')
+      }
+      else {
+        console.log('2P胜利')
+      }
+    }
+
   },
 
+
+  //取消选中
   cancel: function () {
     this.setData({
       selectedCard: !this.data.selectedCard,
+      selectedHandCard: !this.data.selectedHandCard,
+      flower: ''
     })
   },
 
+  //根据随机数进行数组随意排序组合
+  randomDeck: function (a, b) {
+    return Math.random() > 0.5 ? -1 : 1
+  },
+
   //初始化游戏
-  initGame: function() {
-    //TODO 随机化卡组
+  initGame: function () {
+
+    var temp = ['C1', 'C2'
+      , 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'CJ', 'CQ', 'CK',
+      'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'DJ', 'DQ', 'DK',
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10', 'hJ', 'hQ', 'hK',
+      'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'SJ', 'SQ', 'SK'
+    ];
+
+    //初始化数组，打乱牌堆，模拟洗牌
+    temp.sort(this.randomDeck)
     var game = {
       player1: {
         spade: [],
@@ -114,16 +255,14 @@ Page({
         diamond: [],
         totalCount: 0
       },
-      deck: ['C1','C2','C3','C4','C5','C6','C7','C8','C9','C10','CJ','CQ','CK',
-            'D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','DJ','DQ','DK',
-            'h1','h2','h3','h4','h5','h6','h7','h8','h9','h10','hJ','hQ','hK',
-            'S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','SJ','SQ','SK'],
+      deck: [],
       placement: {
         nowCards: [],
         topCard: ''
       }
     }
 
+    game.deck = temp
     this.setData({
       game: game
     })
