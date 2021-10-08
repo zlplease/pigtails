@@ -47,6 +47,12 @@
           "pathName": "pages/localGame/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "等候室",
+          "pathName": "pages/createRoom/index",
+          "query": "",
+          "scene": null
         }
       ]
     }

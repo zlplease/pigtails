@@ -1,2 +1,18 @@
-<!--pages/createRoom/index.wxml-->
-<text>pages/createRoom/index.wxml</text>
+<view class="total">
+  <view class="content">
+    <view class="getBack" bindtap="getBack">返回</view>
+    <view class="op">
+      <view class="isPublic">
+        <image class="flag {{private == false ? 'public' : '' }}" src="https://z3.ax1x.com/2021/10/08/5Cvf6f.png"/>
+        <view class="btn btn1" data-type="0" bindtap="isPublic">私人</view>
+        <view class="btn" data-type="1" bindtap="isPublic">公开</view>
+      </view>
+      <view class="createRoom" bindtap="createRoom">创建新对局</view>
+      <view class="uuid">
+        对局ID
+        <input type="text" model:value="{{uuid}}" placeholder="请输入对局id"/>
+      </view>
+      <view class="startGame" bindtap="startGame">开始游戏</view>
+    </view>
+  </view>
+</view>
