@@ -55,6 +55,16 @@ Page({
         this.setData({
           uuid: uuid
         })
+        var mode = this.data.mode
+        if (mode == 0) {
+          wx.navigateTo({
+            url: '/pages/PVPGame/index?uuid=' + uuid,
+          });
+        } else {
+          wx.navigateTo({
+            url: '/pages/PVEGame/index?uuid=' + uuid,
+          });
+        }
       },
       fail: (res) => {
 
@@ -97,16 +107,16 @@ Page({
           } else {
             wx.showModal({
               title: '提示',
-              content: '对局ID错误，请仔细检查',
+              content: '对局ID错误或人数已达最大限度，请仔细检查',
               showCancel: false,
               confirmText: '确定',
               confirmColor: 'rgb(255,106,71)',
               success: (result) => {
-                if(result.confirm){
+                if (result.confirm) {
                 }
               },
-              fail: ()=>{},
-              complete: ()=>{}
+              fail: () => { },
+              complete: () => { }
             });
           }
         },

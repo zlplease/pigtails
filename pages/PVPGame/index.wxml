@@ -43,6 +43,10 @@
         </view>
       </view>
     </view>
+    <view wx:if="{{!isBegin}}" class="uuid">
+      <view class="uuid1">{{uuid}}</view>
+      <view class="copy" bindtap="copy">复制</view>
+    </view>
     <view class="publicCard">
       <!-- 卡组 -->
       <view class="deck {{gameOver == true ? 'emptyDeck' : ''}}">
@@ -50,12 +54,11 @@
           <image class="back" mode="widthFill" src="../../images/poker/back.png"></image>
         </view>
       </view>
+      <view class="cardCount cardLeft">{{game.deck.length}}</view>
       <view class="op1">
-        <view class="changeCard" bindtap="changeCard">
-          <image class="update" mode="widthFill" src="../../images/icon/update.png" />
-        </view>
-        <view class="countDown" wx:if="{{turn == 0}}">换一张</view>
+        <view class="trusteeship" bindtap="trusteeship">{{content}}</view>
       </view>
+      <view class="cardCount cardRight">{{game.placement.nowCards.length}}</view>
       <!-- 放置区 -->
       <view class="deck {{placeEmpty == true ? 'emptyDeck' : ''}}">
         <view class="placeCards" wx:for="{{game.placement.nowCards}}" wx:key="key">

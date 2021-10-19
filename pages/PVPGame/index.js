@@ -1,8 +1,13 @@
+var app = getApp();
+
 Page({
 
   data: {
+    //游戏是否开始
+    isBegin: 0,
+    content: '托管',
     //0代表自己，1代表对手
-    turn: 0,
+    turn: -1,
     //是否有选中的牌
     selectedCard: false,
     //是否有选择的手牌
@@ -10,9 +15,12 @@ Page({
     //选择的花色
     flower: '',
     //游戏是否结束
-    gameOver: true,
+    gameOver: false,
     //放置区是否为空
     placeEmpty: true,
+    //对局号
+    uuid: '',
+    recordPlayer: -1,
     game: {
       player1: {
         spade: [],
@@ -74,124 +82,70 @@ Page({
     }
   },
 
-  changeCard: function () {
+  //确定出牌
+  confirm: function (e) {
+    var data = {}
     var game = this.data.game
-    game.deck.sort(this.randomDeck)
-    this.setData({
-      game: game
-    })
-    wx.showToast({
-      title: '已更新牌堆',
-      icon: 'success',
-      duration: 1500,
-    
+    if (this.data.selectedCard) {
+      data = {
+        type: 0
+      }
+    }
+    if (this.data.selectedHandCard) {
+      var flower = this.data.flower
+      var temp = ''
+      switch (flower) {
+        case 'S': temp = game.player1.spade.pop()
+          break;
+        case 'H': temp = game.player1.heart.pop()
+          break;
+        case 'C': temp = game.player1.club.pop()
+          break;
+        case 'D': temp = game.player1.diamond.pop()
+          break;
+      }
+      console.log(temp)
+      data = {
+        type: 1,
+        card: temp
+      }
+    }
+    console.log(data)
+    var url = app.globalData.baseUrl + '/game/' + this.data.uuid
+    console.log(url)
+    wx.request({
+      url: url,
+      header: {
+        'content-type': 'application/json',
+        'Authorization': wx.getStorageSync('token')
+      },
+      data: data,
+      method: 'PUT',
+      success: (res) => {
+        console.log('出牌')
+        console.log(res)
+        this.setData({
+          selectedCard: false,
+          selectedHandCard: false,
+        })
+      },
     });
   },
 
-  //确定出牌
-  confirm: function (e) {
-    //test
-    // console.log(this.data.selectedCard)
-    // console.log(this.data.selectedHandCard)
-    var game = this.data.game
-    //判断选中的牌是否来自deck牌堆
-    var temp = ''
-    var player = e.currentTarget.dataset.player
-    if (this.data.selectedCard) {
-      //弹出deck的最后一个元素
-      temp = game.deck.pop()
-    } else if (this.data.selectedHandCard) {
-      //判断选中的牌的具体来源
-      var flower = this.data.flower
-      //如果是1P
-      if (player == 0) {
-        // console.log(flower)
-        switch (flower) {
-          case 'S': temp = game.player1.spade.pop()
-            break;
-          case 'H': temp = game.player1.heart.pop()
-            break;
-          case 'C': temp = game.player1.club.pop()
-            break;
-          case 'D': temp = game.player1.diamond.pop()
-            break;
-        }
-        game.player1.totalCount -= 1
-      } else {
-        //如果是2P
-        switch (flower) {
-          case 'S': temp = game.player2.spade.pop()
-            break;
-          case 'H': temp = game.player2.heart.pop()
-            break;
-          case 'C': temp = game.player2.club.pop()
-            break;
-          case 'D': temp = game.player2.diamond.pop()
-            break;
-        }
-        game.player2.totalCount -= 1
-      }
-    }
 
-    game.placement.nowCards.push(temp)
-    game.placement.topCard = temp
-
+  //取消选中
+  cancel: function () {
+    console.log('hello')
     this.setData({
-      game: game,
-      turn: (this.data.turn + 1) % 2,
       selectedCard: false,
       selectedHandCard: false,
       flower: ''
     })
+  },
 
-    //判断牌顶牌是否一样
-    var len = this.data.game.placement.nowCards.length
-    if (len >= 2) {
-      if (game.placement.nowCards[len - 1][0] == game.placement.nowCards[len - 2][0]) {
-        console.log('收牌')
-        var chargeCards = game.placement.nowCards
-        chargeCards.sort()
-        console.log(chargeCards)
-        for (var i = 0; i < len; i++) {
-          var flower = chargeCards[i][0]
-          var card = chargeCards[i]
-          if (player == 0) {
-            // console.log(flower)
-            switch (flower) {
-              case 'S': game.player1.spade.push(card)
-                break;
-              case 'H': game.player1.heart.push(card)
-                break;
-              case 'C': game.player1.club.push(card)
-                break;
-              case 'D': game.player1.diamond.push(card)
-                break;
-            }
-            game.player1.totalCount += 1
-          } else {
-            //如果是2P
-            switch (flower) {
-              case 'S': game.player2.spade.push(card)
-                break;
-              case 'H': game.player2.heart.push(card)
-                break;
-              case 'C': game.player2.club.push(card)
-                break;
-              case 'D': game.player2.diamond.push(card)
-                break;
-            }
-            game.player2.totalCount += 1
-          }
-        }
-        game.placement.nowCards = []
-        game.placement.topCard = ''
-        this.setData({
-          game: game
-        })
-      }
-    }
-
-    //判断是否结束
+  over: function () {
+    console.log('游戏结束')
+    var game = this.data.game
     var deckLen = this.data.game.deck.length
     if (!deckLen) {
       var count1 = game.player1.totalCount
@@ -201,10 +155,10 @@ Page({
         content = '好耶，玩家一获得了胜利'
       }
       else if (count1 == count2) {
-        content = '好耶，玩家二获得了胜利'
+        content = '好耶，平分秋色'
       }
       else {
-        content = '好耶，平分秋色'
+        content = '好耶，玩家二获得了胜利'
       }
 
       //弹出信息并跳转
@@ -216,7 +170,7 @@ Page({
           confirmText: '知道啦',
           confirmColor: '#3CC51F',
           success: (result) => {
-            if(result.confirm){
+            if (result.confirm) {
               setTimeout(() => {
                 wx.reLaunch({
                   url: '/pages/home/index',
@@ -227,22 +181,177 @@ Page({
         });
       }, 1000);
     }
+  },
+
+  listen: function () {
+    var url = app.globalData.baseUrl + '/game/' + this.data.uuid + '/last'
+    // console.log(url)
+    wx.request({
+      url: url,
+      header: {
+        'content-type': 'application/json',
+        'Authorization': wx.getStorageSync('token')
+      },
+      method: 'GET',
+      success: (res) => {
+        console.log(res.data)
+        if (res.data.code == 403) {
+          wx.showToast({
+            title: '人还没齐，快叫上你的小伙伴',
+            icon: 'none',
+            duration: 1500,
+          });
+        }
+        else if (res.data.code == 200) {
+          console.log(res.data.data.last_msg)
+          var msg = res.data.data.last_msg
+          var turn1 = res.data.data.your_turn
+          if (msg == '对局刚开始') {
+            var text = ''
+            var turn = -1
+            if (turn1) {
+              text = '对局刚开始,我方先手'
+              turn = 0
+            }
+            else {
+              text = '对局刚开始,对方先手'
+              turn = 1
+            }
+            wx.showToast({
+              title: text,
+              icon: 'none',
+              duration: 1500,
+            });
+            this.setData({
+              turn: turn,
+              isBegin: 1
+            })
+          }
+          else {
+            var info = res.data.data.last_code
+            var player = info[0]
+            var type = info[2]
+            var flower = info[4]
+            var card = info.substring(4, 6)
+            var game = this.data.game
+            console.log(player)
+            console.log(this.data.recordPlayer)
+            if (player != this.data.recordPlayer) {
+              if (type == 0) {
+                game.deck.pop()
+              }
+              else {
+                console.log(player)
+                if (!turn1) {
+                  switch (flower) {
+                    case 'S': game.player1.spade.pop()
+                      break;
+                    case 'H': game.player1.heart.pop()
+                      break;
+                    case 'C': game.player1.club.pop()
+                      break;
+                    case 'D': game.player1.diamond.pop()
+                      break;
+                  }
+                  game.player1.totalCount -= 1
+                }
+                else {
+                  switch (flower) {
+                    case 'S': game.player2.spade.pop()
+                      break;
+                    case 'H': game.player2.heart.pop()
+                      break;
+                    case 'C': game.player2.club.pop()
+                      break;
+                    case 'D': game.player2.diamond.pop()
+                      break;
+                  }
+                  game.player2.totalCount -= 1
+                }
+              }
+              console.log(game.placement)
+              console.log(card)
+              //判断是否要收牌,不要则放置右侧牌顶
+              if (game.placement.topCard[0] != card[0]) {
+                game.placement.nowCards.push(card)
+                game.placement.topCard = card
+              }
+              else {
+                console.log('收牌')
+                game.placement.nowCards.push(card)
+                var chargeCards = game.placement.nowCards
+                var len = game.placement.nowCards.length
+                chargeCards.sort()
+                console.log(chargeCards)
+                for (var i = 0; i < len; i++) {
+                  var flower1 = chargeCards[i][0]
+                  var card1 = chargeCards[i]
+                  if (!turn1) {
+                    switch (flower1) {
+                      case 'S': game.player1.spade.push(card1)
+                        break;
+                      case 'H': game.player1.heart.push(card1)
+                        break;
+                      case 'C': game.player1.club.push(card1)
+                        break;
+                      case 'D': game.player1.diamond.push(card1)
+                        break;
+                    }
+                    game.player1.totalCount += 1
+                  }
+                  else {
+                    switch (flower1) {
+                      case 'S': game.player2.spade.push(card1)
+                        break;
+                      case 'H': game.player2.heart.push(card1)
+                        break;
+                      case 'C': game.player2.club.push(card1)
+                        break;
+                      case 'D': game.player2.diamond.push(card1)
+                        break;
+                    }
+                    game.player2.totalCount += 1
+                  }
+
+                }
+                game.placement.nowCards = []
+                game.placement.topCard = ''
+              }
+              this.setData({
+                game: game,
+                flower: '',
+                turn: (this.data.turn + 1) % 2,
+                isBegin: 1,
+                recordPlayer: player
+              })
+            }
+          }
+          // console.log(this.data.game)
+        }
+      },
+    });
+  },
+
+  //托管
+  trusteeship: function () {
 
   },
 
-
-  //取消选中
-  cancel: function () {
-    this.setData({
-      selectedCard: !this.data.selectedCard,
-      selectedHandCard: !this.data.selectedHandCard,
-      flower: ''
-    })
-  },
-
-  //根据随机数进行数组随意排序组合
-  randomDeck: function (a, b) {
-    return Math.random() > 0.5 ? -1 : 1
+  copy: function() {
+    wx.setClipboardData({
+      data: this.data.uuid,
+      success: (res)=>{
+        wx.getClipboardData({
+          success: (res)=>{
+            wx.showToast({
+              title: '复制成功'
+            })
+          }
+        });
+      },
+      fail: ()=>{},
+      complete: ()=>{}
+    });
   },
 
   //初始化游戏
@@ -256,7 +365,6 @@ Page({
     ];
 
     //初始化数组，打乱牌堆，模拟洗牌
-    temp.sort(this.randomDeck)
     var game = {
       player1: {
         spade: [],
@@ -290,6 +398,14 @@ Page({
    */
   onLoad: function (options) {
     console.log(options.uuid)
+    this.setData({
+      uuid: options.uuid
+    })
+    // this.setData({
+    //   uuid: 'b8s5qkqvh6mgwoi4'
+    // })
+    var test = setInterval(this.listen, 2000);
+    // var over = setInterval(this.over, 5000)
   },
 
   /**
@@ -299,7 +415,7 @@ Page({
     this.initGame()
   },
 
-  onShow: function () {
+  onunload: function () {
 
   },
 })

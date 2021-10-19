@@ -205,10 +205,10 @@ Page({
         content = '好耶，玩家一获得了胜利'
       }
       else if (count1 == count2) {
-        content = '好耶，玩家二获得了胜利'
+        content = '好耶，平分秋色'
       }
       else {
-        content = '好耶，平分秋色'
+        content = '好耶，玩家二获得了胜利'
       }
 
       //弹出信息并跳转
@@ -238,8 +238,8 @@ Page({
   //取消选中
   cancel: function () {
     this.setData({
-      selectedCard: !this.data.selectedCard,
-      selectedHandCard: !this.data.selectedHandCard,
+      selectedCard: false,
+      selectedHandCard: false,
       flower: ''
     })
   },
