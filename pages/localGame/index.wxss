@@ -194,12 +194,12 @@
   transform: translateX(1%) translateY(1%);
 }
 
-.deckCards:nth-child(2) {
+.deckCards:nth-child(3) {
   z-index: 2;
   transform: translateX(2%) translateY(3%);
 }
 
-.deckCards:nth-child(3) {
+.deckCards:nth-child(4) {
   z-index: 1;
   transform: translateX(3%) translateY(5%);
 }

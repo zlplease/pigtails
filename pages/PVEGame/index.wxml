@@ -1,3 +1,114 @@
 <view class="total">
-  
+  <view class="content">
+    <!-- 通过disable类将不是自己回合的点击事件禁止 -->
+    <view class="player player2 {{turn == 0 ? 'disable' : ''}}">
+      <image class="avater avater1 {{turn == 1 ? 'round' : ''}}" src="https://img.zcool.cn/community/01ec48579198180000018c1b4c60d4.jpg@1280w_1l_2o_100sh.jpg" mode="widthFill"></image>
+      <!-- 手牌堆 -->
+      <view class="op op1">
+        <view class="handCards">
+          <!-- 黑桃 红桃 梅花 方片 -->
+          <view class="flowerColor">
+            <view class="count">{{game.player2.spade.length}}</view>
+            <view class="cards">
+              <view class="card {{(flower == 'S' && turn == 1 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player2.spade}}" wx:key="key">
+                <!-- 显示牌堆第一张 -->
+                <image src="../../images/poker/{{game.player2.spade[index]}}.jpg" mode="widthFill" />
+              </view>
+            </view>
+          </view>
+          <view class="flowerColor">
+            <view class="count">{{game.player2.heart.length}}</view>
+            <view class="cards">
+              <view class="card {{(flower == 'H' && turn == 1 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player2.heart}}" wx:key="key">
+                <image src="../../images/poker/{{game.player2.heart[index]}}.jpg" mode="widthFill" />
+              </view>
+            </view>
+          </view>
+          <view class="flowerColor">
+            <view class="count">{{game.player2.club.length}}</view>
+            <view class="cards">
+              <view class="card {{(flower == 'C' && turn == 1 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player2.club}}" wx:key="key">
+                <image src="../../images/poker/{{game.player2.club[index]}}.jpg" mode="widthFill" />
+              </view>
+            </view>
+          </view>
+          <view class="flowerColor">
+            <view class="count">{{game.player2.diamond.length}}</view>
+            <view class="cards">
+              <view data-flower="D" bindtap="selectHandCards" class="card {{(flower == 'D' && turn == 1 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player2.diamond}}" wx:key="key">
+                <image src="../../images/poker/{{game.player2.diamond[index]}}.jpg" mode="widthFill" />
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="publicCard">
+      <!-- 卡组 -->
+      <view class="deck {{gameOver == true ? 'emptyDeck' : ''}}">
+        <view bindtap="selectcard" wx:for="{{game.deck}}" wx:key="key" class="deckCards  {{selectedCard == true ? 'selected' : ''}}">
+          <image class="back" mode="widthFill" src="../../images/poker/back.png"></image>
+        </view>
+      </view>
+      <view class="cardCount cardLeft">{{game.deck.length}}</view>
+      <view class="op1">
+        <view class="changeCard" bindtap="changeCard">
+          <image class="update" mode="widthFill" src="../../images/icon/update.png" />
+        </view>
+        <view class="countDown" wx:if="{{turn == 0}}">换一张</view>
+      </view>
+      <view class="cardCount cardRight">{{game.placement.nowCards.length}}</view>
+      <!-- 放置区 -->
+      <view class="deck {{placeEmpty == true ? 'emptyDeck' : ''}}">
+        <view class="placeCards" wx:for="{{game.placement.nowCards}}" wx:key="key">
+          <image class="front" mode="widthFill" src="../../images/poker/{{game.placement.nowCards[game.placement.nowCards.length-1]}}.jpg"></image>
+        </view>
+      </view>
+    </view>
+    <view class="player player1 {{turn == 1 ? 'disable' : ''}}">
+      <image class="avater {{turn == 0 ? 'round' : ''}}" src="https://img.zcool.cn/community/0196f9579198180000012e7ef0b234.jpg@1280w_1l_2o_100sh.jpg" mode="widthFill"></image>
+      <!-- 手牌堆 -->
+      <view class="op">
+        <view class="btns" wx-if="{{turn == 0 && (selectedCard || selectedHandCard)}}">
+          <view class="btn confirm" data-player="0" bindtap="confirm">确定</view>
+          <view class="btn cancel" bindtap="cancel">取消</view>
+        </view>
+        <view class="handCards">
+          <view class="flowerColor">
+            <view class="count">{{game.player1.spade.length}}</view>
+            <view class="cards">
+              <view data-flower="S" bindtap="selectHandCards" class="card {{(flower == 'S' && turn == 0 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player1.spade}}" wx:key="key">
+                <!-- 显示牌堆第一张 -->
+                <image src="../../images/poker/{{game.player1.spade[index]}}.jpg" mode="widthFill" />
+              </view>
+            </view>
+          </view>
+          <view class="flowerColor">
+            <view class="count">{{game.player1.heart.length}}</view>
+            <view class="cards">
+              <view data-flower="H" bindtap="selectHandCards" class="card {{(flower == 'H' && turn == 0 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player1.heart}}" wx:key="key">
+                <image src="../../images/poker/{{game.player1.heart[index]}}.jpg" mode="widthFill" />
+              </view>
+            </view>
+          </view>
+          <view class="flowerColor">
+            <view class="count">{{game.player1.club.length}}</view>
+            <view class="cards">
+              <view data-flower="C" bindtap="selectHandCards" class="card {{(flower == 'C' && turn == 0 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player1.club}}" wx:key="key">
+                <image src="../../images/poker/{{game.player1.club[index]}}.jpg" mode="widthFill" />
+              </view>
+            </view>
+          </view>
+          <view class="flowerColor">
+            <view class="count">{{game.player1.diamond.length}}</view>
+            <view class="cards">
+              <view data-flower="D" bindtap="selectHandCards" class="card {{(flower == 'D' && turn == 0 && selectedHandCard ) ? 'selected' : ''}}" wx:for="{{game.player1.diamond}}" wx:key="key">
+                <image src="../../images/poker/{{game.player1.diamond[index]}}.jpg" mode="widthFill" />
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
 </view>

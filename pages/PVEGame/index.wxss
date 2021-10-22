@@ -6,4 +6,299 @@
   min-height: 100%;
   background-image: url("https://img.zcool.cn/community/01a3205d4247c8a80120695cf6660f.jpg@1280w_1l_2o_100sh.jpg");
   background-size: 100% 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.changeCard {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  box-shadow:  4rpx 4rpx 60rpx #ededed,
+             -4rpx -4rpx 60rpx #ffffff;
+}
+
+.update {
+  width: 64%;
+  height: 64%;
+}
+
+.content {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.player {
+  width: 100%;
+  height: 28%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.avater {
+  width: 120rpx;
+  height: 120rpx;
+  background-color: white;
+  border-radius: 50%;
+  margin-top: 150rpx;
+}
+
+.avater1 {
+  margin-top: 24rpx;
+}
+
+.round {
+  border: 12rpx solid tomato;
+}
+
+.op {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.op1 {
+  justify-content: flex-start;
+}
+
+.handCards {
+  width: 100%;
+  height: 64%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  margin-top: 24rpx;
+}
+
+.flowerColor {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cards {
+  position: relative;
+  width: 100%;
+  height: 72%;
+  background-color: white;
+  border-radius: 16rpx;
+  margin-top: 24rpx;
+}
+
+.card {
+  position:absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.card image {
+  width: 100%;
+  height: 100%;
+}
+
+.count {
+  height: 16%;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  width: 160rpx;
+  height: 60rpx;
+  background-color: #cdcdcd;
+  margin: 0 24rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16rpx;
+  color: white;
+  font-size: 24rpx;
+}
+
+.confirm {
+  background-image: linear-gradient(to right, #74CC98 ,#8CBBFF);
+}
+
+.publicCard {
+  width: 100%;
+  height: 42%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.deck {
+  position: relative;
+  width: 35%;
+  height: 80%;
+  border-radius: 16rpx;
+  /* 升天阴影 */
+  /* box-shadow:  5px 5px 10px #ededed,
+             -5px -5px 10px #ffffff; */
+}
+
+.emptyDeck {
+  background-color: white;
+}
+
+.op1 {
+  display: flex;
+  flex-direction: column;
+}
+
+.countDown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.countDown2 {
+  transform: rotate(180deg);
+}
+
+.trusteeship {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(249,207,121);
+  color: white;
+  font-weight: bold;
+}
+
+.update {
+  width: 64%;
+  height: 64%;
+}
+
+.deckCards, .placeCards {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 1rpx solid #ededed;
+  z-index: 999;
+}
+
+.deckCards:nth-child(1) {
+  z-index: 4;
+}
+
+.deckCards:nth-child(2) {
+  z-index: 3;
+  transform: translateX(1%) translateY(1%);
+}
+
+.deckCards:nth-child(2) {
+  z-index: 2;
+  transform: translateX(2%) translateY(3%);
+}
+
+.deckCards:nth-child(3) {
+  z-index: 1;
+  transform: translateX(3%) translateY(5%);
+}
+
+.placeCards:nth-child(1) {
+  z-index: 4;
+}
+
+.placeCards:nth-child(2) {
+  z-index: 3;
+  transform: rotate(-5deg);
+}
+
+.placeCards:nth-child(3) {
+  z-index: 2;
+  transform: rotate(-10deg);
+}
+
+.placeCards:nth-child(4) {
+  z-index: 1;
+  transform: rotate(-15deg);
+}
+
+
+.back, .front {
+  width: 100%;
+  height: 100%;
+}
+
+.selected {
+  width: 102%;
+  height: 102%;
+  box-shadow:  4rpx 4rpx 20rpx #ededed,
+             -4rpx -4rpx 20rpx #ffffff;
+}
+
+.disable {
+  pointer-events: none;
+}
+
+.uuid {
+  width: 80%;
+  height: 108rpx;
+  display: flex;
+  margin-left: 72rpx;
+  justify-content: center;
+  align-items: center;
+  border-radius: 24rpx;
+  background: linear-gradient(145deg, #FF7B47, #FF6347);
+}
+
+.uuid1 {
+  width: 60%;
+  height: 64rpx;
+  background-color: #ffffff;
+  margin-right: 48rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12rpx;
+  color: #cdcdcd;
+}
+
+.copy {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.cardCount {
+  position: absolute;
+  top: 1120rpx;
+  color: white;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.cardLeft {
+  left: 180rpx;
+}
+
+.cardRight {
+  right: 180rpx;
 }

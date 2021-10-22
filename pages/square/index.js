@@ -86,5 +86,8 @@ Page({
     var uuid = this.data.games[index].uuid
     console.log(uuid)
     //根据uuid进入房间进行游戏
+    wx.reLaunch({
+      url: '/pages/PVPGame/index?uuid=' + uuid,
+    })
   }
 })

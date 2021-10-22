@@ -11,7 +11,7 @@
   <view class="buttons">
     <view class="btn local" data-path="/pages/localGame/index" bindtap="chooseMode">本地作战</view>
     <view class="btn PVP" data-path="/pages/createRoom/index?mode=0" bindtap="chooseMode">在线对战</view>
-    <view class="btn PVE" data-path="/pages/createRoom/index?mode=1" bindtap="chooseMode">人机对战</view>
+    <view class="btn PVE" data-path="/pages/PVEGame/index" bindtap="chooseMode">人机对战</view>
   </view>
   <view class="square" data-path="/pages/square/index" bindtap="chooseMode">广场</view>
   <view class="pigs">

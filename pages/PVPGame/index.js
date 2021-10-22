@@ -21,6 +21,7 @@ Page({
     //对局号
     uuid: '',
     recordPlayer: -1,
+    listen: 0,
     game: {
       player1: {
         spade: [],
@@ -95,13 +96,13 @@ Page({
       var flower = this.data.flower
       var temp = ''
       switch (flower) {
-        case 'S': temp = game.player1.spade.pop()
+        case 'S': temp = game.player1.spade[game.player1.spade.length-1]
           break;
-        case 'H': temp = game.player1.heart.pop()
+        case 'H': temp = game.player1.heart[game.player1.heart.length-1]
           break;
-        case 'C': temp = game.player1.club.pop()
+        case 'C': temp = game.player1.club[game.player1.club.length-1]
           break;
-        case 'D': temp = game.player1.diamond.pop()
+        case 'D': temp = game.player1.diamond[game.player1.diamond.length-1]
           break;
       }
       console.log(temp)
@@ -235,7 +236,10 @@ Page({
             var card = info.substring(4, 6)
             var game = this.data.game
             console.log(player)
+            console.log(typeof(player))
+            console.log(typeof(this.data.recordPlayer))
             console.log(this.data.recordPlayer)
+            console.log((player == this.data.recordPlayer))
             if (player != this.data.recordPlayer) {
               if (type == 0) {
                 game.deck.pop()
@@ -404,7 +408,10 @@ Page({
     // this.setData({
     //   uuid: 'b8s5qkqvh6mgwoi4'
     // })
-    var test = setInterval(this.listen, 2000);
+    var listen = setInterval(this.listen, 2000);
+    this.setData({
+      listen: listen
+    })
     // var over = setInterval(this.over, 5000)
   },
 
@@ -416,6 +423,7 @@ Page({
   },
 
   onunload: function () {
-
+    clearInterval(this.data.listen);
+    clearInterval(this.data.over);
   },
 })
