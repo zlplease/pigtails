@@ -22,6 +22,7 @@ Page({
     uuid: '',
     recordPlayer: -1,
     listen: 0,
+    over: 0,
     game: {
       player1: {
         spade: [],
@@ -91,18 +92,34 @@ Page({
       data = {
         type: 0
       }
+      if (this.data.game.deck.length == 1) {
+        var lastCard = game.deck.pop()
+        console.log('最后一张牌了')
+        if (lastCard == this.data.placement.topCard) {
+          var placementLen = this.data.game.placement.nowCards
+          if (this.data.turn == 1) {
+            game.player1.totalCount += placementLen
+          }
+          else {
+            game.player2.totalCount += placementLen
+          }
+        }
+        this.setData({
+          game: game
+        })
+      }
     }
     if (this.data.selectedHandCard) {
       var flower = this.data.flower
       var temp = ''
       switch (flower) {
-        case 'S': temp = game.player1.spade[game.player1.spade.length-1]
+        case 'S': temp = game.player1.spade[game.player1.spade.length - 1]
           break;
-        case 'H': temp = game.player1.heart[game.player1.heart.length-1]
+        case 'H': temp = game.player1.heart[game.player1.heart.length - 1]
           break;
-        case 'C': temp = game.player1.club[game.player1.club.length-1]
+        case 'C': temp = game.player1.club[game.player1.club.length - 1]
           break;
-        case 'D': temp = game.player1.diamond[game.player1.diamond.length-1]
+        case 'D': temp = game.player1.diamond[game.player1.diamond.length - 1]
           break;
       }
       console.log(temp)
@@ -145,10 +162,11 @@ Page({
   },
 
   over: function () {
-    console.log('游戏结束')
+    console.log('游戏还没结束')
     var game = this.data.game
     var deckLen = this.data.game.deck.length
     if (!deckLen) {
+      console.log('游戏结束')
       var count1 = game.player1.totalCount
       var count2 = game.player2.totalCount
       var content = ''
@@ -181,6 +199,7 @@ Page({
           },
         });
       }, 1000);
+      clearInterval(this.data.over);
     }
   },
 
@@ -236,8 +255,8 @@ Page({
             var card = info.substring(4, 6)
             var game = this.data.game
             console.log(player)
-            console.log(typeof(player))
-            console.log(typeof(this.data.recordPlayer))
+            console.log(typeof (player))
+            console.log(typeof (this.data.recordPlayer))
             console.log(this.data.recordPlayer)
             console.log((player == this.data.recordPlayer))
             if (player != this.data.recordPlayer) {
@@ -332,29 +351,287 @@ Page({
           }
           // console.log(this.data.game)
         }
+        else if (res.data.code == 400) {
+          wx.showToast({
+            title: res.data.data.error_msg,
+            icon: 'none',
+            duration: 1500,
+          });
+        }
       },
     });
   },
 
   //托管
   trusteeship: function () {
-
+    var ai = 0
+    if (this.data.content == '托管') {
+      ai = setInterval(this.ai, 2000)
+      this.setData({
+        content: '托管中',
+        ai: ai
+      })
+    }
+    else {
+      this.setData({
+        content: '托管',
+      })
+      clearInterval(this.data.ai)
+    }
   },
 
-  copy: function() {
+  ai: function () {
+    console.log('AI已启动')
+    if (this.data.turn == 0) {
+      var data = this.getOperation()
+      console.log(data)
+      var url = app.globalData.baseUrl + '/game/' + this.data.uuid
+      console.log(url)
+      wx.request({
+        url: url,
+        header: {
+          'content-type': 'application/json',
+          'Authorization': wx.getStorageSync('token')
+        },
+        data: data,
+        method: 'PUT',
+        success: (res) => {
+          console.log('出牌')
+          console.log(res)
+          this.setData({
+            selectedCard: false,
+            selectedHandCard: false,
+          })
+        },
+      });
+    }
+  },
+
+  getOperation: function () {
+    //初始化
+    var res = {
+      type: 0,
+      card: ''
+    }
+    var data = this.data
+    var p1Msg = new Array()//p1当前信息
+    p1Msg['spade'] = data.game.player1.spade.length
+    p1Msg['heart'] = data.game.player1.heart.length
+    p1Msg['club'] = data.game.player1.club.length
+    p1Msg['diamond'] = data.game.player1.diamond.length
+
+    var p2Msg = new Array()//p2当前信息
+    p2Msg['spade'] = data.game.player2.spade.length
+    p2Msg['heart'] = data.game.player2.heart.length
+    p2Msg['club'] = data.game.player2.club.length
+    p2Msg['diamond'] = data.game.player2.diamond.length
+
+    var placeMsg = new Array()//放置区当前信息
+    placeMsg['spade'] = 0
+    placeMsg['heart'] = 0
+    placeMsg['club'] = 0
+    placeMsg['diamond'] = 0
+    for (var key in data.game.placement.nowCards) {
+      if (key[0] == 'S') {
+        placeMsg['spade']++
+      }
+      else if (key[0] == 'H') {
+        placeMsg['heart']++
+      }
+      else if (key[0] == 'C') {
+        placeMsg['club']++
+      }
+      else if (key[0] == 'D') {
+        placeMsg['diamond']++
+      }
+    }
+    var placeCount = placeMsg['spade'] + placeMsg['heart'] + placeMsg['club'] + placeMsg['diamond']
+
+    var deckMsg = new Array()//牌库当前信息
+    deckMsg['spade'] = 13 - placeMsg['spade'] - p1Msg['spade'] - p2Msg['spade']
+    deckMsg['heart'] = 13 - placeMsg['heart'] - p1Msg['heart'] - p2Msg['heart']
+    deckMsg['club'] = 13 - placeMsg['club'] - p1Msg['club'] - p2Msg['club']
+    deckMsg['diamond'] = 13 - placeMsg['diamond'] - p1Msg['diamond'] - p2Msg['diamond']
+    var deckCount = deckMsg['spade'] + deckMsg['heart'] + deckMsg['club'] + deckMsg['diamond']
+
+    if (data.game.player1.totalCount == 0 ||
+      data.game.player2.totalCount > deckCount + 25 ||
+      data.game.player2.totalCount > 39) {
+      res = {
+        type: 0
+      }
+      return res
+    }//p1无牌或必胜情况，翻牌
+    if (data.placeEmpty == false) {//放置区不空
+      var topFlower = data.game.placement.topCard[0]
+      switch (topFlower) {
+        case 'S':
+          topFlower = 'spade'
+          break;
+        case 'H':
+          topFlower = 'heart'
+          break;
+        case 'C':
+          topFlower = 'club'
+          break;
+        case 'D':
+          topFlower = 'diamond'
+          break;
+      }
+      var probTop = deckMsg[topFlower] / deckCount //翻开判定区顶部花色的概率
+    }
+
+    if (data.game.player1.totalCount <= data.game.player2.totalCount) {//p1手牌少
+      if (data.placeEmpty == false) {
+        if (data.game.player1.totalCount + placeCount < data.game.player2.totalCount &&
+          data.game.player1.totalCount + placeCount < 16
+        ) {//吃牌后牌数比对面少且小于16张，吃牌
+          var tmp = ''
+          console.log('403')
+          if(p1Msg[topFlower]!=0) {
+            switch (topFlower) {
+              case 'spade':
+                tmp = data.game.player1.spade[data.game.player1.spade.length - 1]
+                break;
+              case 'heart':
+                tmp = data.game.player1.heart[data.game.player1.heart.length - 1]
+                break;
+              case 'club':
+                tmp = data.game.player1.club[data.game.player1.club.length - 1]
+                break;
+              case 'diamond':
+                tmp = data.game.player1.diamond[data.game.player1.diamond.length - 1]
+                break;
+            }
+            res = {
+              type: 1,
+              card: tmp
+            }
+            return res
+          }
+          else{
+            res = {
+              type: 0
+            }
+            return res
+          }
+        }//吃牌
+        else if (probTop < 0.25) {//翻开放置区顶的牌概率小于0.25，翻牌
+          res = {
+            type: 0
+          }
+          return res
+        } else {
+          var p1MaxFlowerCount = -1
+          var p1MaxFlower
+          for (var key in p1Msg) {
+            if (key == topFlower) {
+              continue
+            }
+            if (p1MaxFlowerCount >= p1Msg[key]) {
+              p1MaxFlowerCount = p1Msg[key]
+              p1MaxFlower = key
+            }
+          }//找p1数量最多的花色且不为放置区顶的牌
+          if (p1MaxFlowerCount == -1) {
+            res = {
+              type: 0
+            }
+            return res
+          }
+          var tmp = ''
+          console.log('448')
+          switch (p1MaxFlower) {
+            case 'spade': tmp = data.game.player1.spade[data.game.player1.spade.length - 1]
+              break;
+            case 'heart': tmp = data.game.player1.heart[data.game.player1.heart.length - 1]
+              break;
+            case 'club': tmp = data.game.player1.club[data.game.player1.club.length - 1]
+              break;
+            case 'diamond': tmp = data.game.player1.diamond[data.game.player1.diamond.length - 1]
+              break;
+          }
+          res = {
+            type: 1,
+            card: tmp
+          }
+          return res
+        }
+      }
+      else {
+        var deckMaxFlower = ''//牌库中最多的且p1手里有的牌
+        var deckMaxFlowerCount = -1
+        for (key in deckMsg) {
+          if (deckMaxFlowerCount <= deckMsg[key] && p1Msg[key] != 0) {
+            deckMaxFlowerCount = deckMsg[key]
+            deckMaxFlower = key
+          }
+        }
+        var tmp = ''
+        console.log('480')
+        switch (deckMaxFlower) {
+          case 'spade': tmp = data.game.player1.spade[data.game.player1.spade.length - 1]
+            break;
+          case 'heart': tmp = data.game.player1.heart[data.game.player1.heart.length - 1]
+            break;
+          case 'club': tmp = data.game.player1.club[data.game.player1.club.length - 1]
+            break;
+          case 'diamond': tmp = data.game.player1.diamond[data.game.player1.diamond.length - 1]
+            break;
+        }
+        res = {
+          type: 1,
+          card: tmp
+        }
+        return res
+      }
+    }
+    else {//ai手牌多
+      var deckMaxFlower = ''//牌库中最多的且p1手里有的牌
+      var deckMaxFlowerCount = -1
+      for (key in deckMsg) {
+        if (deckMaxFlowerCount <= deckMsg[key] && p1Msg[key] != 0) {
+          deckMaxFlowerCount = deckMsg[key]
+          deckMaxFlower = key
+        }
+      }
+      var tmp = ''
+      console.log(deckMaxFlower)
+      console.log('512')
+      // debugger
+      switch (deckMaxFlower) {
+        case 'spade': tmp = data.game.player1.spade[data.game.player1.spade.length - 1]
+          break;
+        case 'heart': tmp = data.game.player1.heart[data.game.player1.heart.length - 1]
+          break;
+        case 'club': tmp = data.game.player1.club[data.game.player1.club.length - 1]
+          break;
+        case 'diamond': tmp = data.game.player1.diamond[data.game.player1.diamond.length - 1]
+          break;
+      }
+      res = {
+        type: 1,
+        card: tmp
+      }
+      // debugger
+      return res
+    }
+  },
+
+  copy: function () {
     wx.setClipboardData({
       data: this.data.uuid,
-      success: (res)=>{
+      success: (res) => {
         wx.getClipboardData({
-          success: (res)=>{
+          success: (res) => {
             wx.showToast({
               title: '复制成功'
             })
           }
         });
       },
-      fail: ()=>{},
-      complete: ()=>{}
+      fail: () => { },
+      complete: () => { }
     });
   },
 
@@ -409,10 +686,12 @@ Page({
     //   uuid: 'b8s5qkqvh6mgwoi4'
     // })
     var listen = setInterval(this.listen, 2000);
+    var over = setInterval(this.over, 5000)
     this.setData({
-      listen: listen
+      listen: listen,
+      over: over
     })
-    // var over = setInterval(this.over, 5000)
+    
   },
 
   /**
@@ -424,6 +703,5 @@ Page({
 
   onunload: function () {
     clearInterval(this.data.listen);
-    clearInterval(this.data.over);
   },
 })

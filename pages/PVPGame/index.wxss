@@ -163,8 +163,8 @@
 }
 
 .trusteeship {
-  width: 96rpx;
-  height: 96rpx;
+  width: 120rpx;
+  height: 120rpx;
   border-radius: 50%;
   display: flex;
   justify-content: center;
