@@ -335,7 +335,7 @@ Page({
     //初始化
     var res = {
       type: 0,
-      card: ''
+      card:''
     }
     var data = this.data
     var p1Msg = new Array()//p1当前信息
@@ -422,6 +422,12 @@ Page({
             case 'diamond': tmp = data.game.player2.diamond[data.game.player2.diamond.length - 1]
               break;
           }
+          if(!tmp || tmp==undefined){
+            res = {
+              type:0
+            }
+            return res
+          }
           res = {
             type: 1,
             card: tmp
@@ -463,6 +469,12 @@ Page({
             case 'diamond': tmp = data.game.player2.diamond[data.game.player2.diamond.length - 1]
               break;
           }
+          if(!tmp || tmp==undefined){
+            res = {
+              type:0
+            }
+            return res
+          }
           res = {
             type: 1,
             card: tmp
@@ -490,6 +502,12 @@ Page({
             break;
           case 'diamond': tmp = data.game.player2.diamond[data.game.player2.diamond.length - 1]
             break;
+        }
+        if(!tmp || tmp==undefined){
+          res = {
+            type:0
+          }
+          return res
         }
         res = {
           type: 1,
@@ -520,6 +538,12 @@ Page({
           break;
         case 'diamond': tmp = data.game.player2.diamond[data.game.player2.diamond.length - 1]
           break;
+      }
+      if(!tmp || tmp==undefined){
+        res = {
+          type:0
+        }
+        return res
       }
       res = {
         type: 1,

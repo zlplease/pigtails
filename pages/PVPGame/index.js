@@ -410,8 +410,7 @@ Page({
   getOperation: function () {
     //初始化
     var res = {
-      type: 0,
-      card: ''
+      type: 0
     }
     var data = this.data
     var p1Msg = new Array()//p1当前信息
@@ -503,6 +502,12 @@ Page({
                 tmp = data.game.player1.diamond[data.game.player1.diamond.length - 1]
                 break;
             }
+            if(!tmp || tmp==undefined){
+              res = {
+                type:0
+              }
+              return res
+            }
             res = {
               type: 1,
               card: tmp
@@ -551,6 +556,12 @@ Page({
             case 'diamond': tmp = data.game.player1.diamond[data.game.player1.diamond.length - 1]
               break;
           }
+          if(!tmp || tmp==undefined){
+            res = {
+              type:0
+            }
+            return res
+          }
           res = {
             type: 1,
             card: tmp
@@ -578,6 +589,12 @@ Page({
             break;
           case 'diamond': tmp = data.game.player1.diamond[data.game.player1.diamond.length - 1]
             break;
+        }
+        if(!tmp || tmp==undefined){
+          res = {
+            type:0
+          }
+          return res
         }
         res = {
           type: 1,
@@ -609,6 +626,12 @@ Page({
         case 'diamond': tmp = data.game.player1.diamond[data.game.player1.diamond.length - 1]
           break;
       }
+      if(!tmp || tmp==undefined){
+        res = {
+          type:0
+        }
+        return res
+      }
       res = {
         type: 1,
         card: tmp
@@ -617,6 +640,7 @@ Page({
       return res
     }
   },
+
 
   copy: function () {
     wx.setClipboardData({
